@@ -1,0 +1,155 @@
+# Tecla MOD (Super / Windows)
+set $mod Mod4
+
+# Fuente con íconos (asegúrate de tener FiraCode Nerd Font instalada)
+font pango:FiraCode Nerd Font 5
+
+# Workspaces con íconos (necesita Nerd Font)
+set $ws1 "1: "
+set $ws2 "2: "
+set $ws3 "3: "
+set $ws4 "4: "
+set $ws5 "5: "
+set $ws6 "6: "
+set $ws7 "7: "
+set $ws8 "8: "
+set $ws9 "9: "
+set $ws10 "10: "
+
+# Layout y gaps estilo bspwm
+workspace_layout default
+for_window [class=".*"] layout splith
+gaps inner 4
+gaps outer 4
+
+# Bordes finos
+new_window pixel 1
+new_float pixel 1
+
+# Aplicaciones flotantes
+for_window [class="Pavucontrol"] floating enable
+for_window [class="Blueman-manager"] floating enable
+for_window [class="Nm-connection-editor"] floating enable
+
+# Modificadores flotantes
+bindsym $mod+Shift+space flozating toggle
+floating_modifier $mod
+
+# Autostart apps
+exec --no-startup-id feh --bg-scale ~/.config/i3/wallpaper.png
+exec --no-startup-id picom --config ~/.config/picom.conf
+exec --no-startup-id nm-applet
+exec --no-startup-id blueman-applet
+exec --no-startup-id cbatticon
+
+
+# Barra de estado
+bar {
+    position top
+    #status_command i3blocks
+    status_command python3 /usr/bin/bumblebee-status \
+        -m datetime  \
+        -t iceberg-rainbow
+
+    font pango:FiraCode Nerd Font 14
+    workspace_buttons yes
+    strip_workspace_numbers yes
+    tray_output primary
+
+    colors {
+        background #1e1e2e
+        statusline #cdd6f4
+        separator  #585b70
+
+        focused_workspace  #89b4fa #89b4fa #1e1e2e
+        active_workspace   #313244 #313244 #cdd6f4
+        inactive_workspace #1e1e2e #1e1e2e #a6adc8
+        urgent_workspace   #f38ba8 #f38ba8 #1e1e2e
+        binding_mode       #f9e2af #f9e2af #1e1e2e
+    }
+}
+
+
+# Lanzadores
+bindsym $mod+Return exec alacritty
+bindsym $mod+d exec rofi -show drun
+bindsym $mod+Shift+d exec rofi -show run
+
+# Navegación entre ventanas
+bindsym $mod+Up focus up
+bindsym $mod+Down focus down
+bindsym $mod+Left focus left 
+bindsym $mod+Right focus right
+
+# Cambiar entre workspaces
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+bindsym $mod+9 workspace $ws9
+bindsym $mod+0 workspace $ws10
+
+# Mover ventanas entre workspaces
+bindsym $mod+Shift+1 move container to workspace $ws1
+bindsym $mod+Shift+2 move container to workspace $ws2
+bindsym $mod+Shift+3 move container to workspace $ws3
+bindsym $mod+Shift+4 move container to workspace $ws4
+bindsym $mod+Shift+5 move container to workspace $ws5
+bindsym $mod+Shift+6 move container to workspace $ws6
+bindsym $mod+Shift+7 move container to workspace $ws7
+bindsym $mod+Shift+8 move container to workspace $ws8
+bindsym $mod+Shift+9 move container to workspace $ws9
+bindsym $mod+Shift+0 move container to workspace $ws10
+
+# Volumen
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym $mod+F1 exec pavucontrol
+
+# Brillo
+bindsym XF86MonBrightnessUp exec brightnessctl set +10%
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+bindsym $mod+F2 exec light -A 10
+
+# Alternativas brillo/volumen
+bindsym $mod+F11 exec brightnessctl set +10%
+bindsym $mod+F10 exec brightnessctl set 10%-
+bindsym $mod+F9 exec amixer set Master 5%+ unmute
+bindsym $mod+F8 exec amixer set Master 5%- unmute
+
+# Captura de pantalla
+bindsym $mod+Shift+s exec scrot ~/Pictures/screenshot.png
+
+# Cerrar, bloquear, apagar, reiniciar
+bindsym $mod+q kill
+bindsym $mod+Shift+e exec i3lock -i ~/Pictures/screenlock.png
+bindsym $mod+Shift+q exec i3-msg exit
+bindsym $mod+Shift+p exec systemctl poweroff
+bindsym $mod+Shift+r restart
+
+# Mover ventanas flotantes con teclas
+bindsym $mod+Ctrl+Left  move left 20 px
+bindsym $mod+Ctrl+Right move right 20 px
+bindsym $mod+Ctrl+Up    move up 20 px
+bindsym $mod+Ctrl+Down  move down 20 px
+
+# Cambiar de salida
+bindsym $mod+Shift+Left focus output left
+bindsym $mod+Shift+Right focus output right
+
+# Dummy assignments para que aparezcan los workspaces en la barra
+assign [class="__dummy__1"] $ws1
+assign [class="__dummy__2"] $ws2
+assign [class="__dummy__3"] $ws3
+assign [class="__dummy__4"] $ws4
+assign [class="__dummy__5"] $ws5
+assign [class="__dummy__6"] $ws6
+assign [class="__dummy__7"] $ws7
+assign [class="__dummy__8"] $ws8
+assign [class="__dummy__9"] $ws9
+assign [class="__dummy__10"] $ws10
