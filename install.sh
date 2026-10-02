@@ -453,7 +453,37 @@ fc-cache -f >/dev/null 2>&1 || true
 echo ""
 echo "🧩 Preparando i3..."
 
+# Si i3 está instalado/detectado, eliminar completamente
+# la configuración anterior para instalar la nueva desde cero.
+if command_exists i3; then
+
+    echo "✅ i3 detectado."
+
+    if [ -d "$I3_DIR" ]; then
+
+        echo "🗑️ Eliminando configuración anterior de i3:"
+        echo "   $I3_DIR"
+
+        rm -rf "$I3_DIR"
+
+        echo "✅ Configuración anterior eliminada."
+
+    else
+
+        echo "ℹ️ No existe configuración anterior de i3."
+
+    fi
+
+else
+
+    echo "ℹ️ i3 todavía no está disponible."
+
+fi
+
 mkdir -p "$I3_DIR"
+
+echo "✅ Directorio preparado:"
+echo "   $I3_DIR"
 
 # ============================================================
 # 15. COPIAR CONFIG DESDE EL DIRECTORIO DEL SCRIPT
@@ -467,38 +497,21 @@ if [ -f "$SOURCE_CONFIG" ]; then
     echo "📄 Encontrado config:"
     echo "   $SOURCE_CONFIG"
 
-    # No hacer backup si el archivo es exactamente igual
-    if [ -f "$TARGET_CONFIG" ] \
-        && cmp -s "$SOURCE_CONFIG" "$TARGET_CONFIG"
-    then
+    cp -f \
+        "$SOURCE_CONFIG" \
+        "$TARGET_CONFIG"
 
-        echo "✅ La configuración de i3 ya es idéntica."
-
-    else
-
-        if [ -f "$TARGET_CONFIG" ]; then
-            backup_file "$TARGET_CONFIG"
-        fi
-
-        cp -f \
-            "$SOURCE_CONFIG" \
-            "$TARGET_CONFIG"
-
-        echo "✅ config copiado."
-
-    fi
+    echo "✅ config copiado correctamente:"
+    echo "   $TARGET_CONFIG"
 
 else
 
-    echo "⚠️ No se encontró:"
+    echo "❌ No se encontró:"
     echo "   $SOURCE_CONFIG"
 
-    if [ -f "$TARGET_CONFIG" ]; then
-        echo "✅ Se conserva el config existente."
+    echo "❌ No se puede continuar sin el archivo config."
+    exit 1
 
-    else
-        echo "⚠️ No existe configuración de i3."
-    fi
 fi
 
 # ============================================================
@@ -513,33 +526,21 @@ if [ -f "$SOURCE_WALLPAPER" ]; then
     echo "🖼️ Encontrado wallpaper:"
     echo "   $SOURCE_WALLPAPER"
 
-    if [ -f "$TARGET_WALLPAPER" ] \
-        && cmp -s "$SOURCE_WALLPAPER" "$TARGET_WALLPAPER"
-    then
+    cp -f \
+        "$SOURCE_WALLPAPER" \
+        "$TARGET_WALLPAPER"
 
-        echo "✅ El wallpaper ya está actualizado."
-
-    else
-
-        if [ -f "$TARGET_WALLPAPER" ]; then
-            backup_file "$TARGET_WALLPAPER"
-        fi
-
-        cp -f \
-            "$SOURCE_WALLPAPER" \
-            "$TARGET_WALLPAPER"
-
-        echo "✅ wallpaper.jpg copiado."
-    fi
+    echo "✅ wallpaper.jpg copiado correctamente:"
+    echo "   $TARGET_WALLPAPER"
 
 else
 
-    echo "⚠️ No se encontró:"
+    echo "❌ No se encontró:"
     echo "   $SOURCE_WALLPAPER"
 
-    if [ -f "$TARGET_WALLPAPER" ]; then
-        echo "✅ Se conserva el wallpaper existente."
-    fi
+    echo "❌ No se puede continuar sin el wallpaper."
+    exit 1
+
 fi
 
 # ============================================================
