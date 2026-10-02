@@ -157,7 +157,7 @@ assign [class="__dummy__10"] $ws10
 
 # Display HDMI 
 
-exec --no-startup-id xrandr --output HDMI-2 --mode 1920x1080 --rate 120
+#exec --no-startup-id xrandr --output HDMI-2 --mode 1920x1080 --rate 120
 
 # Picom 
 
